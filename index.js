@@ -28,11 +28,33 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+
+
 //Custom code lies below
 // First, add get endpoint for the 'api' enpoint
-app.get("/api/:date", function (req, res) {
-  let d = new Date(req.params.date);
-  res.json({unix: Date.parse(req.params.date), utc: d.toUTCString()});
+app.get("/api/:date?", function (req, res) {
+  let t = req.params.date;
+  let d;
+  if (!isNaN(Number(t)))
+  {
+    console.log(Number(t));
+    d = new Date(Number(req.params.date));
+  }
+  else
+  {
+    d = new Date(req.params.date);
+  }
+  if (t === undefined)
+  {
+    let currentTime = new Date();
+    res.json({unix: Date.parse(currentTime), utc: currentTime.toUTCString()});
+  }
+  else if (d == "Invalid Date")
+  {
+    res.json({error: "Invalid Date"});
+  }
+  else
+    res.json({unix: Date.parse(d), utc: d.toUTCString()});
 })
 
 
