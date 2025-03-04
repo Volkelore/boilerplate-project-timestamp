@@ -1,5 +1,6 @@
 // index.js
 // where your node app starts
+let bodyParser = require('body-parser');
 
 // init project
 var express = require('express');
@@ -13,6 +14,9 @@ app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 20
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
+// Add middleware that interprets...?
+app.use(bodyParser.urlencoded({extended: false}))
+
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -23,6 +27,13 @@ app.get("/", function (req, res) {
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
+
+//Custom code lies below
+// First, add get endpoint for the 'api' enpoint
+app.get("/api/:date", function (req, res) {
+  let d = new Date(req.params.date);
+  res.json({unix: Date.parse(req.params.date), utc: d.toUTCString()});
+})
 
 
 
